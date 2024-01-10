@@ -1,0 +1,59 @@
+---
+author: Gaurav Sharma
+description: Amazon Elastic Compute Cloud What is EC2? An AWS EC2 instance is a virtual server in the cloud that you can rent from Amazon Web Services (AW
+keywords: what is ec2,ec2 in simple word,elastic compute cloud,aws step by step tutorials,how to access ec2 instance from linux ,how to access it from window machine ,Amazon EC2,EC2 instances,AWS EC2,Create EC2 instance,Access EC2 instance,Key pair in EC2,SSH access to EC2,Security groups in EC2,Elastic Compute Cloud,Cloud server setup,AWS getting started guide,AWS cloud hosting,AWS EC2 basics,Amazon Web Services EC2
+title: EC2 Service
+---
+
+# Amazon Elastic Compute Cloud
+
+## What is EC2?
+
+An AWS EC2 instance is a virtual server in the cloud that you can rent from Amazon Web Services (AWS) to run your applications and workloads.
+
+Think of an EC2 instance as a computer that exists in the cloud instead of on your physical desk. It provides you with computing resources such as CPU (processing power), memory, storage, and networking capabilities.
+
+When you launch an EC2 instance, you can choose the instance type that suits your needs. Each instance type has different specifications, such as the amount of CPU, memory, and storage it offers. You can select the instance type that matches the requirements of your application or workload.
+
+Once your EC2 instance is up and running, you can access it remotely over the internet. You can install the operating system and software applications you need, configure security settings, and manage your data.
+
+EC2 instances are highly flexible. You can easily scale them up or down based on demand. If your application needs more resources to handle increased traffic, you can add more instances. Similarly, if the demand decreases, you can reduce the number of instances to save costs.
+
+EC2 instances are commonly used for a wide range of purposes, such as hosting websites and web applications, running backend services, performing data processing and analytics, and supporting development and testing environments.
+
+In summary, an AWS EC2 instance is a virtual server in the cloud that provides you with computing resources to run your applications. It offers flexibility, scalability, and remote accessibility, making it a fundamental component of cloud-based infrastructure.
+
+## How to Create Your First EC2 Instance
+
+1.  Sign in to AWS: First, you need an AWS account. If you don\'t have one, sign up for free. Once you\'re signed in, go to the EC2 dashboard.
+2.  Launch an Instance: Click on \"Launch Instance.\" AWS provides a variety of instance types to choose from. Pick one that suits your needs.
+3.  Choose an Amazon Machine Image (AMI): An AMI is like a pre-configured template for your instance. You can select one from the AWS Marketplace or use an AWS-provided AMI.
+4.  Configure Your Instance: Here, you can choose things like the instance type, the number of instances you want, and other settings. You can also add storage to your instance.
+5.  Add Tags (Optional): Tags are labels you can put on your instance to help organize and manage them better.
+6.  Configure Security Groups: Security groups act like virtual firewalls for your instance. You can create a new one or use an existing group. They control the traffic to your instance. You need to make sure that SSH (port 22) is allowed through the security group.
+7.  Review and Launch: Review your instance configuration, and if everything looks good, click \"Launch.\"
+8.  Create a Key Pair: If you don\'t have an existing key pair, you\'ll need to create one. This is crucial for securely accessing your instance.
+9.  Launch Your Instance: Click \"Launch Instances.\" Your EC2 instance is now being created.
+
+## How to Access Your EC2 Instance
+
+Now that your EC2 instance is up and running, you need a way to access it.
+
+**Key Pair**: A key pair consists of a public key and a private key. Think of the public key as your username and the private key as your password. You keep the private key secret, and AWS stores the public key.
+
+**SSH:** SSH stands for Secure Shell. It\'s a secure way to communicate with your EC2 instance. You use an SSH client (like PuTTY on Windows or Terminal on macOS and Linux) to connect to your instance.
+
+### Accessing Your EC2 Instance Using SSH
+
+1.  Open your SSH client.
+2.  Use the SSH command with your instance\'s public DNS or IP address and the private key file:
+
+```bash
+ssh -i path/to/your/key.pem ec2-user@your-instance-public-dns-or-ip
+```
+
+If all goes well, you\'ll be connected to your EC2 instance.
+
+### Demo Video
+
+[Click Here for Demo Video](https://www.youtube.com/watch?v=f-T4xWUZWSk)

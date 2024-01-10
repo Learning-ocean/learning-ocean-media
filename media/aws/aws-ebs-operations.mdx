@@ -1,0 +1,175 @@
+---
+author: Gaurav Sharma
+description: "EBS Operations These are the steps to create EBS volume Go to EC2 Console: Visit the Amazon EC2 website. Navigate to"
+keywords: how to create ebs volume,create first ebs volume,how to use ebs volume with linux machine,how to use ebs volume with windows machine,ebs step by step tutorials,ebs tutorials,ebs by gaurav sharma,aws tutorial ,aws in simple language ,aws step by step tutorials
+title: EBS Operations
+---
+
+# EBS Operations
+
+## These are the steps to create EBS volume
+
+1.  Go to EC2 Console: Visit the Amazon EC2 website.
+2.  Navigate to Volumes: In the menu, click on \"Volumes.\"
+3.  Create a Volume: Select \"Create volume.\"
+4.  Choose Type: Decide the type of volume you want. Different types have different features.
+5.  Specify Size: Enter the size of the volume in gigabytes (GiB).
+6.  (Optional: IOPS and Throughput: Depending on the type, specify the maximum input/output operations per second (IOPS) or throughput in MiB/s.)
+7.  Select Availability Zone: Choose the specific zone where the volume will be located. It must match the zone of your instance.
+8.  Encryption: Decide whether to enable encryption. If you choose to encrypt, select the encryption method and key.
+9.  Tags (Optional): You can add custom tags to the volume for better organization and identification.
+10. Create the Volume: Click \"Create volume.\"
+11. To use the volume, attach it to an instance.
+
+## How to Attach an EBS Volume to Your EC2 Instance
+
+1.  Go to EC2 Console: Visit the Amazon EC2 website.
+2.  Navigate to Volumes: Click on \"Volumes\" in the menu.
+3.  Select the Volume: Choose the volume you want to attach, then click \"Actions\" and select \"Attach volume.\"
+4.  Choose an Instance: Enter the ID of the instance or select it from the list. The volume and the instance must be in the same Availability Zone.
+5.  Device Name: Enter a name for the volume. This name is used by Amazon EC2, although it might get a different name when mounted on the instance.
+6.  Attach the Volume: Click \"Attach volume.\"
+
+After attaching an Amazon EBS volume to your instance, it appears as a block device. You can format and mount it like any other volume. Data written to this volume is transparent to applications. Snapshots can be taken for backup or to create new volumes. Volumes larger than 2 TiB require a GPT partitioning scheme. Windows instance users can find specific instructions in the Amazon EC2 User Guide for Windows Instances.
+
+# Make an Amazon EBS volume available for use on Linux
+
+To make a new Amazon EBS volume ready for use on a Linux system:
+
+**Connect to Your Instance**: Use SSH to connect to your Linux instance.
+
+**Check Device Name and File System**:
+
+```bash
+lsblk
+```
+
+Output:
+
+```bash
+NAME  MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+xvdf  202:80  0  10G 0 disk
+```
+
+**Check Existing File System** (Optional):
+
+```bash
+sudo file -s /dev/xvdf
+```
+
+Output (If no file system exists):
+
+```bash
+/dev/xvdf: data
+```
+
+**Create File System** (If Needed):
+
+```bash
+sudo mkfs -t xfs /dev/xvdf
+```
+
+Output (If mkfs.xfs is not found, first install XFS tools using \`sudo
+yum install xfsprogs\`).
+
+**Create Mount Point**:
+
+```bash
+sudo mkdir /data
+```
+
+**Mount the Volume**:
+
+```bash
+sudo mount /dev/xvdf /data
+```
+
+Now, the Amazon EBS volume is mounted at the \`/data\` directory and
+ready for use.
+
+# Make an Amazon EBS volume available for use on Windows
+
+Steps to Make an EBS Volume Accessible Using DiskPart in Windows:
+
+- Login to Your Windows Instance:
+- Access your Windows instance via Remote Desktop.
+- Determine Disk Number:
+- Open Start and select Windows PowerShell.
+- Use the \`Get-Disk\` Cmdlet to list available disks.
+- Note the Number corresponding to the disk you want to make accessible.
+- Create a DiskPart Script:
+- Open File Explorer and go to a directory (e.g., C:\\) to store the script file.
+- Right-click an empty space, select New \> Text Document.
+- Name the file \`diskpart.txt\`.
+- Edit the Script:
+- Open \`diskpart.txt\` and add the necessary commands, adjusting disk number, partition type, volume label, and drive letter if needed.
+- Be cautious not to reformat a volume with existing data.
+- Example Commands:
+
+```bash
+select disk 1 
+attributes disk clear readonly 
+online disk noerr
+convert mbr 
+create partition primary 
+format quick fs=ntfs label="volume_label" 
+assign letter="drive_letter"
+```
+
+- Run DiskPart Script:
+- Open a command prompt, and navigate to the folder containing the
+  script.
+- Execute the following command to make the volume accessible:
+
+```bash
+C:\> diskpart /s diskpart.txt
+```
+
+## Unmount and detach a volume
+
+- Unmount the Volume: From your Linux instance, execute the following command to unmount the specified device (/dev/sdh).
+
+```bash
+[ec2-user ~]$ sudo umount -d /dev/sdh
+```
+
+- Detach the Volume from the Instance:
+- Open the Amazon EC2 console at [https://console.aws.amazon.com/ec2/](https://console.aws.amazon.com/ec2/).
+- In the navigation pane, click on \"Volumes.\"
+- Select the volume you want to detach.
+- Choose \"Actions,\" then click \"Detach Volume.\"
+- Confirm the action by clicking \"Detach.\"
+
+## Key Points on Detaching Amazon EBS Volumes:
+
+1.  Detaching and Data Preservation:
+2.  Detaching an Amazon Elastic Block Store (Amazon EBS) volume from an instance is necessary to attach it elsewhere or delete it.
+3.  Importantly, detaching a volume does not impact the data stored on it.
+4.  Explicit Detachment and Instance Termination:
+5.  You can detach an EBS volume explicitly or as part of terminating an instance.
+6.  When the instance is running, it\'s crucial to unmount the volume before detaching it.
+7.  Special Consideration for Root Devices:
+8.  If an EBS volume serves as the root device of an instance, the instance must be stopped before detaching the volume.
+9.  Reattaching Volumes:
+10. It\'s possible to reattach a detached volume without unmounting it.
+11. However, the reattached volume might not retain the same mount point.
+12. If there were ongoing writes to the volume during detachment, data synchronization might be required.
+13. Storage Charges and Deletion:
+14. Even after detaching, you continue incurring charges for volume storage if it exceeds the AWS Free Tier limit.
+15. To stop further charges, you must delete the volume. Refer to \"Delete an Amazon EBS volume\" for detailed instructions.
+
+# Delete an Amazon EBS volume
+
+When you\'re done using an Amazon EBS storage, you can remove it. Once removed, all the data is gone, and you can\'t use it with any Instance anymore. But, before you remove it, you can save a copy of all the data (called a snapshot). Later, if you need the storage again, you can use this snapshot to make a new one.
+
+###### To delete an EBS volume using the console
+
+1.  Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
+2.  In the navigation pane, choose **Volumes**.
+3.  Select the volume to delete and choose **Actions**, **Delete volume**.
+4.  If **Delete volume** is greyed out, the volume is attached to an instance. You must detach the volume from the instance before it can be deleted.
+5.  In the confirmation dialog box, choose **Delete**.
+
+### Demo Video
+
+[Click Here for Demo Video](https://www.youtube.com/watch?v=1eUU1SybgQg)
